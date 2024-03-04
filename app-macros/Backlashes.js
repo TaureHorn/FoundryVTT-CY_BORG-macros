@@ -11,7 +11,7 @@ const d12 = await new Roll(`1d12`).roll()
 const nameSt = "<strong style='color:#28ffff'>"
 const resultSt = "<strong style='color: white'>"
 
-let result_html = `<h1><strong>APP BACKLASH</strong></h1>`
+let result_html = `<h1>${nameSt}APP BACKLASH</strong></h1>`
 switch (fate.total) {
     case 1:
         result_html += `Black ice left behind by an unidentified entity hits you for ${resultSt}${blackIce.total}</strong> damage and burns your deck. It requires a workshop and a <strong>Knowledge DR14</strong> test to fix.`

@@ -4,11 +4,11 @@ const hp = await new Roll(`1d10`).roll()
 const nameSt = "<strong style='color:#B861ff'>"
 const resultSt = "<strong style='color: white'>"
 
-var result_html = ""
+let result_html = `<h1>${nameSt}NANO POWER</h1>`
 if ( hp.total < 6) {
-    result_html = `${nameSt}NANO POWER:</br>Benevolent Suturedroids</strong> get to work on ${resultSt}${targets.total}</strong> targets. They regain ${resultSt}${hp.total}</strong> HP each.`
+    result_html += `Benevolent Suturedroids</strong></br>${resultSt}${targets.total}</strong> people regain ${resultSt}${hp.total}</strong> HP each.`
 } else {
-    result_html = `${nameSt}NANO POWER:</br>Benevolent Suturedroids</strong> get to work on ${resultSt}${targets.total}</strong> targets. They regain ${resultSt}${hp.total}</strong> HP each and begin to develop a migraine.`
+    result_html += `Benevolent Suturedroids</strong></br>${resultSt}${targets.total}</strong> people regain ${resultSt}${hp.total}</strong> HP each and begin to develop a migraine.`
 }
 
 ChatMessage.create({
