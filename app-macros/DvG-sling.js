@@ -22,5 +22,4 @@ ChatMessage.create({
     user: game.user._id,
     speaker: ChatMessage.getSpeaker({token: actor}),
     content: result_html
-
 });

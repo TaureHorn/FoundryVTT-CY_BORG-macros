@@ -8,7 +8,8 @@ const nameSt = "<strong style='color:#B861ff'>"
 const resultSt = "<strong style='color: white'>"
 
 const result_html = `${nameSt}NANO POWER:</br>
-    Chill of the Void.</strong> Frost covers the area, snowflakes hang in the air. ${resultSt}${targets.total}</strong> targets are bitten by the cold over the next 4 rounds, taking damage if they do not pass a Toughness test.
+    Chill of the Void.</strong></br>
+    Frost covers the area, snowflakes hang in the air. ${resultSt}${targets.total}</strong> targets are bitten by the cold over the next 4 rounds, taking damage if they do not pass a Toughness test.
     </br>
     <table>
         <thead>
