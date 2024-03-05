@@ -1,9 +1,9 @@
-const targets = await new Roll(`1d4`).roll()
+const rounds = await new Roll(`1d6`).roll()
 
-const nameSt = "<strong style='color:#b861ff'>"
+const nameSt = "<strong style='color:#b860ff'>"
 const resultSt = "<strong style='color: white'>"
 
-const result_html = `<h1>${nameSt}NANO POWER</h1>Crawling Carapace</strong></br>${resultSt}${targets.total}</strong> targets gain -d6 armour for 4 rounds. Sometimes it feels as if this thing has a will of its own, but that's probably just your imagination.`
+const result_html = `<h1>${nameSt}NANO POWER</h1>Bent Prism</strong></br>A person becomes invisible and attacks and defends at DR6. The effect lasts for ${resultSt}${rounds.total}</strong> rounds or until you are hurt.`
 
 game.user.hasRole("GAMEMASTER") ?
     ChatMessage.create({
