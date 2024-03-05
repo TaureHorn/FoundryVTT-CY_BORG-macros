@@ -6,8 +6,17 @@ const resultSt = "<strong style='color: white'>"
 
 const result_html = `<h1>${nameSt}NANO POWER</h1>Lifetap</strong></br>Choose two targets, one to heal and one to hurt. The healing target tests Presence DR10 to heal ${resultSt}${success.total}</strong> damage, while the second target is dealt ${resultSt}${success.total}</strong> damage.</br></br>Failure deals both targets ${resultSt}${fail.total}</strong> damage. A translucent, oozing bridge of blood and energy flows between the creatures, like oil in water.`
 
-ChatMessage.create({
-    user: game.user._id,
-    speaker: ChatMessage.getSpeaker({token: actor}),
-    content: result_html
-});
+game.user.hasRole("GAMEMASTER") ?
+    ChatMessage.create({
+        user: game.user._id,
+        speaker: ChatMessage.getSpeaker({ token: actor }),
+        content: result_html,
+        whisper: game.users.filter(u => u.isGM)
+    })
+    :
+    ChatMessage.create({
+        user: game.user._id,
+        speaker: ChatMessage.getSpeaker({ token: actor }),
+        content: result_html,
+    });
+

@@ -7,8 +7,17 @@ const resultSt = "<strong style='color: white'>"
 
 const result_html = `<h1>${nameSt}APP HACK:</h1>Boomboom</strong></br>${resultSt}${devices.total}</strong> nearby simple devices (lamps, monitors, cameras etc.) explode. ${resultSt}${damage.total}</strong> damage to up to ${resultSt}${targets.total}</strong> target(s)`
 
-ChatMessage.create({
-    user: game.user._id,
-    speaker: ChatMessage.getSpeaker({token: actor}),
-    content: result_html
-});
+game.user.hasRole("GAMEMASTER") ?
+    ChatMessage.create({
+        user: game.user._id,
+        speaker: ChatMessage.getSpeaker({ token: actor }),
+        content: result_html,
+        whisper: game.users.filter(u => u.isGM)
+    })
+    :
+    ChatMessage.create({
+        user: game.user._id,
+        speaker: ChatMessage.getSpeaker({ token: actor }),
+        content: result_html,
+    });
+

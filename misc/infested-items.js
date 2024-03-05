@@ -42,9 +42,17 @@ switch (item.total) {
         break;
 }
 
-ChatMessage.create({
-    user: game.user._id,
-    speaker: ChatMessage.getSpeaker({token: actor}),
-    content: result_html
-});
+game.user.hasRole("GAMEMASTER") ?
+    ChatMessage.create({
+        user: game.user._id,
+        speaker: ChatMessage.getSpeaker({token: actor}),
+        content: result_html,
+        whisper: game.users.filter(u=> u.isGM)
+    })
+:
+   ChatMessage.create({
+        user: game.user._id,
+        speaker: ChatMessage.getSpeaker({token: actor}),
+        content: result_html,
+    });
 

@@ -1,6 +1,6 @@
-const nameSt = "<strong style='color:#b861ff'>"
+const nameSt = "<strong style='color:#28ffff'>"
 
-const result_html = `<h1>${nameSt}NANO POWER</h1>Remote Control</strong></br>A target within spitting range must obey a single command. You will forever hear their wordless voice faintly in your mind.`
+const result_html = `<h1>${nameSt}APP HACK:</h1>SigilTag</strong></br>This location and nearby systems are tagged with your invisible sigil, enabling you to remotely activate Apps as if you were present. Only two locations can be tagged at the same time.`
 
 game.user.hasRole("GAMEMASTER") ?
     ChatMessage.create({

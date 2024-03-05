@@ -18,8 +18,17 @@ const result_html = `<h1>${nameSt}APP HACK:</h1>DvG-sling</strong></br>Deal dama
     ${resultSt}${big.total}</strong> to larger targets,
 </div>`
 
-ChatMessage.create({
-    user: game.user._id,
-    speaker: ChatMessage.getSpeaker({token: actor}),
-    content: result_html
-});
+game.user.hasRole("GAMEMASTER") ?
+    ChatMessage.create({
+        user: game.user._id,
+        speaker: ChatMessage.getSpeaker({ token: actor }),
+        content: result_html,
+        whisper: game.users.filter(u => u.isGM)
+    })
+    :
+    ChatMessage.create({
+        user: game.user._id,
+        speaker: ChatMessage.getSpeaker({ token: actor }),
+        content: result_html,
+    });
+
