@@ -16,7 +16,7 @@ if (actorData.type !== "character") {
             <input type="number" id="attack-dr" name="attack-dr" value="12" placeholder="12">
         </div>`
 
-    rangedMode ? form +=
+    mode.ranged && mode.autofire ? form +=
         `<div class="form-group">
         <label for="autofire">Autofire?</label>
         <input type="checkbox" id="autofire" name="autofire" value="1">
@@ -72,7 +72,7 @@ if (actorData.type !== "character") {
     }
 
     new Dialog({
-        title: rangedMode ? "Ranged Attack" : "Melee Attack",
+        title: mode.ranged ? "Ranged Attack" : "Melee Attack",
         content: form,
         buttons: {
             attack: { label: "Attack", callback: () => confirmed = true },
@@ -88,16 +88,18 @@ if (actorData.type !== "character") {
                     let result_html = ""
                     let modifier = ""
 
-                    // header
-                    if (rangedMode) {
-                        const autofire = html.find('#autofire')[0].checked
-                        if (autofire) {
+                    // attack mode
+                    if (mode.ranged && mode.autofire) {
+                        if (html.find('#autofire')[0].checked) {
                             modifier = actorData.system.abilities.agility.value
                             result_html = `<span><strong>RANGED ATTACK: Autofire</strong></span>`
                         } else {
                             modifier = actorData.system.abilities.presence.value
                             result_html = `<span><strong>RANGED ATTACK</strong></span>`
                         }
+                    } else if (mode.ranged) {
+                        modifier = actorData.system.abilities.presence.value
+                        result_html = `<span><strong>RANGED ATTACK</strong></span>`
                     } else {
                         modifier = actorData.system.abilities.strength.value
                         result_html += `<span><strong>MELEE ATTACK</strong></span>`
@@ -159,7 +161,7 @@ if (actorData.type !== "character") {
                     }
 
                     // output result_html to macro to push to chat
-                    const macro = game.macros.get("// input ChatSpeaker macro uuid")
+                    const macro = game.macros.get("bsiTa8xf6eTMONFt")
                     const speak = await macro.execute({ message: result_html })
                 }
             })();
