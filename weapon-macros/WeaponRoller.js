@@ -11,7 +11,7 @@ if (actorData.type !== "character") {
 
     let form =
         `<form class="dialog attack-dialog">
-        <div class"form-group">
+        <div class="form-group">
             <label for=DR">Attack DR</label>
             <input type="number" id="attack-dr" name="attack-dr" value="12" placeholder="12">
         </div>`
