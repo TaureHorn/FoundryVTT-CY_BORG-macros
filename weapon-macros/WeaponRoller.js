@@ -161,7 +161,7 @@ if (actorData.type !== "character") {
                     }
 
                     // output result_html to macro to push to chat
-                    const macro = game.macros.get("bsiTa8xf6eTMONFt")
+                    const macro = game.macros.get("// input ChatSpeaker macro uuid")
                     const speak = await macro.execute({ message: result_html })
                 }
             })();
