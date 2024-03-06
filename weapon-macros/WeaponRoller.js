@@ -159,9 +159,13 @@ if (actorData.type !== "character") {
                                 break;
                         }
                     }
+                    if (typeof comment !== 'undefined') {
+                        result_html += `<hr><p>${comment}</p>`
+                    }
 
                     // output result_html to macro to push to chat
-                    const macro = game.macros.get("// input ChatSpeaker macro uuid")
+                    const macro = game.macros.get("bsiTa8xf6eTMONFt")
+                    // replace arguments with relevant ChatSpeaker macro uuid
                     const speak = await macro.execute({ message: result_html })
                 }
             })();
