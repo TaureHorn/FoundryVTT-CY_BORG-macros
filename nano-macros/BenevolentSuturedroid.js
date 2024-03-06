@@ -11,17 +11,6 @@ if (hp.total < 6) {
     result_html += `Benevolent Suturedroids</strong></br>${resultSt}${targets.total}</strong> people regain ${resultSt}${hp.total}</strong> HP each and begin to develop a migraine.`
 }
 
-game.user.hasRole("GAMEMASTER") ?
-    ChatMessage.create({
-        user: game.user._id,
-        speaker: ChatMessage.getSpeaker({ token: actor }),
-        content: result_html,
-        whisper: game.users.filter(u => u.isGM)
-    })
-    :
-    ChatMessage.create({
-        user: game.user._id,
-        speaker: ChatMessage.getSpeaker({ token: actor }),
-        content: result_html,
-    });
+const macro = game.macros.get("// uuid of ChatSpeaker macro")
+const speak = await macro.execute({message: result_html})
 

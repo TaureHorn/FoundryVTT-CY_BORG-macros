@@ -2,17 +2,6 @@ const nameSt = "<strong style='color:#b861ff'>"
 
 const result_html = `<h1>${nameSt}NANO POWER</h1>Remote Control</strong></br>A target within spitting range must obey a single command. You will forever hear their wordless voice faintly in your mind.`
 
-game.user.hasRole("GAMEMASTER") ?
-    ChatMessage.create({
-        user: game.user._id,
-        speaker: ChatMessage.getSpeaker({ token: actor }),
-        content: result_html,
-        whisper: game.users.filter(u => u.isGM)
-    })
-    :
-    ChatMessage.create({
-        user: game.user._id,
-        speaker: ChatMessage.getSpeaker({ token: actor }),
-        content: result_html,
-    });
+const macro = game.macros.get("// uuid of ChatSpeaker macro")
+const speak = await macro.execute({message: result_html})
 
