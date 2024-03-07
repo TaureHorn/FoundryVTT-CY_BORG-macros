@@ -12,15 +12,15 @@ if (actorData.type !== "character") {
     let form =
         `<form class="dialog attack-dialog">
         <div class="form-group">
-            <label for=DR">Attack DR</label>
+            <label for="DR">ATTACK DR:</label>
             <input type="number" id="attack-dr" name="attack-dr" value="12" placeholder="12">
         </div>`
 
     mode.ranged && mode.autofire ? form +=
         `<div class="form-group">
-        <label for="autofire">Autofire?</label>
-        <input type="checkbox" id="autofire" name="autofire" value="1">
-    </div>`
+            <label for="autofire">AUTOFIRE?</label>
+            <input style="margin:0" type="checkbox" id="autofire" name="autofire" value="1">
+        </div>`
         : form += ``
 
     form += `</form>`
@@ -72,11 +72,11 @@ if (actorData.type !== "character") {
     }
 
     new Dialog({
-        title: mode.ranged ? "Ranged Attack" : "Melee Attack",
+        title: mode.ranged ? "RANGED ATTACK" : "MELEE ATTACK",
         content: form,
         buttons: {
-            attack: { label: "Attack", callback: () => confirmed = true },
-            cancel: { label: "Cancel", callback: () => confirmed = false }
+            attack: { label: "ATTACK", callback: () => confirmed = true },
+            cancel: { label: "CANCEL", callback: () => confirmed = false }
         },
         default: "attack",
 

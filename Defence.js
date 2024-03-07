@@ -26,12 +26,21 @@ if (actorData.type !== "character") {
     let form =
         `<form class="dialog">
             <div class="form-group">
-                <label for="DR">Defence DR:</label>
-                <input type="number" id="defence-dr" name="defence-dr" value="12" placeholder="12">
+                <label for="DR">DEFENCE DR:</label>
+                <input type="number" min="1" max="20" id="defence-dr" name="defence-dr" value="12" placeholder="12">
             </div>
             <div class="form-group">
-                <label for="attack-die">Incoming attack die</label>
-                <input type="text" id="incoming-attack-die" name="incoming-attack-die" value="d6" placeholder="d6">
+                <label for="attack-die">DAMAGE DIE:</label>
+                <select id="incoming-attack-die" name="incoming-attack-die">
+                    <option value="d2">d2</option>
+                    <option value="d3">d3</option>
+                    <option value="d4">d4</option>
+                    <option value="d6" selected>d6</option>
+                    <option value="d8">d8</option>
+                    <option value="d10">d10</option>
+                    <option value="d12">d12</option>
+                    <option value="2d10">2d10</option>
+                </select>
             </div>
         </form>
         `
@@ -105,11 +114,11 @@ if (actorData.type !== "character") {
     }
 
     new Dialog({
-        title: "Defend",
+        title: "DEFEND",
         content: form,
         buttons: {
-            defend: { label: "Defend", callback: () => confirmed = true },
-            cancel: { label: "Cancel", callback: () => confirmed = false }
+            defend: { label: "DEFEND", callback: () => confirmed = true },
+            cancel: { label: "CANCEL", callback: () => confirmed = false }
         },
         default: "defend",
 
