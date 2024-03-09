@@ -5,8 +5,6 @@ if (canvas.tokens.controlled.length !== 1) {
 const src = canvas.tokens.controlled[0].document.texture.img
 const targets = Array.from(game.users.targets)
 
-console.log(src, targets)
-
 if (targets.length < 1) {
     ui.notifications.warn(`You need to target at least one token to clone an image to`)
 } else {

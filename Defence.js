@@ -51,6 +51,7 @@ if (actorData.type !== "character") {
         "faded": `#999999`
     }
 
+    let damage = ""
     async function damageParser(attackRoll, damageRoll) {
         let damageMitigation = 0
         if (armour.tier > 0) {
@@ -74,7 +75,7 @@ if (actorData.type !== "character") {
         }
         const crit = attackRoll.terms[0].results[0].result === attackRoll.terms[0].number ? true : false
         const rawDmg = crit ? damageRoll.total * 2 : damageRoll.total
-        let damage = rawDmg - damageMitigation
+        damage = rawDmg - damageMitigation
         if (damage < 0) { damage = 0 }
 
         const min = damageRoll.terms[0].number
@@ -154,12 +155,33 @@ if (actorData.type !== "character") {
                                 <span style="color:${color.faded}">(${dmgDice})</span>
                             </p>
                             `
+                        // auto deal damage
+                        let HP = actor.system.hitPoints.value
+                        HP = HP - damage
+                        console.log(HP)
+
+                        actor.update({ 'system.hitPoints.value': HP })
 
                         // fumble
                         if (diceRoll === defenceRoll.terms[0].number) {
                             result_html += `<hr>
-                                <p>FUMBLE: Damage has been doubled. Reduce your armour/cover by one tier</p>
+                                <p>FUMBLE: Damage has been doubled and your armour has been reduced by one tier</p>
                                 `
+
+                            // auto decrement armour tier
+                            const actorData = canvas.tokens.controlled[0].document.actor
+                            const items = actorData.items._source
+                            const armour = items.find(({ type }) => type === "armor")
+                            const index = items.findIndex((obj) => obj === armour)
+
+                            if (typeof armour !== 'undefined') {
+                                const tier = armour.system.tier.value >= 1 ? armour.system.tier.value - 1 : 0
+                                const armourReduced = structuredClone(armour)
+                                const changedItems = structuredClone(items)
+                                armourReduced.system.tier.value = tier
+                                changedItems[index] = armourReduced
+                                actorData.update({ 'items': changedItems })
+                            }
                         }
 
                     }
