@@ -31,18 +31,21 @@ if (actorData.type !== "character") {
         "crit": `#18f081`,
         "faded": `#999999`
     }
+    let damage = ""
 
     function damageParser(attackRoll, damageRoll) {
         const min = damageRoll.terms[0].number
         const max = damageRoll.terms[0].faces * min
         const crit = attackRoll.terms[0].results[0].result === attackRoll.terms[0].faces ? true : false
+        damage = crit ? damageRoll.total * 2 : damageRoll.total
+
 
         if (damageRoll.total === max) {
-            return `<span style="color:${color.crit}">${crit ? damageRoll.total * 2 : damageRoll.total}</span>`
+            return `<span style="color:${color.crit}">${damage}</span>`
         } else if (damageRoll.total === min) {
-            return `<span style="color:${color.fumble}">${crit ? damageRoll.total * 2 : damageRoll.total}</span>`
+            return `<span style="color:${color.fumble}">${damage}</span>`
         } else {
-            return `<span style="color:${color.normal}">${crit ? damageRoll.total * 2 : damageRoll.total}</span>`
+            return `<span style="color:${color.normal}">${damage}</span>`
         }
     }
 
@@ -134,7 +137,7 @@ if (actorData.type !== "character") {
                         if (diceRoll === roll.terms[0].faces) {
                             result_html +=
                                 `<hr>
-                            <p>CRIT: Damage has been doubled. Targets armour/cover also reduced by 1 tier</p>
+                            <p>CRIT: Damage has been doubled. Targets armour reduced by 1 tier</p>
                             `
                         }
                     }
@@ -167,8 +170,20 @@ if (actorData.type !== "character") {
                     const macro = game.macros.get("bsiTa8xf6eTMONFt")
                     // replace arguments with relevant ChatSpeaker macro uuid
                     const speak = await macro.execute({ message: result_html })
+
+                    if (typeof damage === "number") {
+                        const targets = game.user.targets
+                        let actorTargets = ""
+                        targets.forEach((token) => {
+                            actorTargets += `<span>${token.document.name}, </span>`
+                        })
+
+                        const whisper = game.macros.get("Rm0I5zSV62exJcTZ")
+                        const quiet = await whisper.execute({ incoming: damage, targets: actorTargets })
+                    }
                 }
             })();
         }
     }).render(true)
 }
+
