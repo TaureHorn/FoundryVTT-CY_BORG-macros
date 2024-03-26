@@ -9,9 +9,9 @@ if (!game.user.hasRole("GAMEMASTER")) {
 
     tokens.forEach((token) => {
         const imgStr = token.document.texture.src
+        const digital = imgStr.endsWith("-digital.png")
         const digitise = imgStr.replace(".png", "-digital.png")
         const analogise = imgStr.replace("-digital.png", ".png")
-        const digital = imgStr.endsWith("-digital.png")
         
         token.document.update({ 'texture.src': digital ? analogise : digitise })
     })
