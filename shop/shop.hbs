@@ -3,19 +3,19 @@
         <span >SCAMAZON</span>
         <span>ツ</span>
     </div>
-    <nav class="scamazon-tab-selector" data-group="scamazon-products" style="display:flex;justify-content:space-between;width:100%">
+    <nav class="scamazon-tab-selector" data-group="scamazon-products" style="display:flex;justify-content:space-evenly;width:100%">
         {{#each _TABS}}
-            <a data-group="scamazon-products" data-tab="scamazon-{{tab}}" style="border-color:black;border-style:solid;border-top-left-radius:1rem;border-top-right-radius:1rem;border-width:2px 2px 0 2px;font-family:Kontrapunkt;font-size:14pt;font-weight:bold;margin:1em;padding:5px">{{label}}</a>
+            <a data-group="scamazon-products" data-tab="scamazon-{{tab}}" style="border:2px outset black;font-family:Kontrapunkt;font-size:14pt;font-weight:bold;padding:3px">{{label}}</a>
         {{/each}}
     </nav>
     <section class="scamazon-tab">
 
         <input id="product" name="product" type="text" style="display:none" />
         <div class="tab scamazon-weapons" data-group="scamazon-products" data-tab="scamazon-weapons">
-            {{#each weapon}}
-                <div style="align-items:center;border:1px solid black;display:flex;gap:10px;justify-content:space-between;margin:10px">
-                    <div style="align-items:center;border-right:1px solid black;display:flex;flex:8;gap:5px">
-                        <img src="{{img}}" height="64" width="64" />
+            {{#each weapon}}{{#unless system.cybertech}}
+                <div style="align-items:center;border:1px outset black;display:flex;gap:10px;justify-content:space-between;margin:10px">
+                    <div style="display:flex;flex:8;gap:5px">
+                        <img src="{{img}}" style="cursor:pointer" data-action="inspect" data-product-id="{{_id}}" height="96" width="96" />
                         <div >
                             <span style="font-family:PPM Extended Black;font-size:14pt;font-weight:bold;text-transform:uppercase">{{name}}</span></br>
                             <span style="font-weight:bold">{{system.weaponType}}: {{system.damage}}{{#if system.autofire}} autofire{{/if}}</span>
@@ -23,36 +23,73 @@
                         </div>
                     </div>
                     <div style="flex:1.5;padding:5px;text-align:center;width:10rem">
-                        <span style="font-size:14pt;font-weight:bold">{{system.price}}¤</span>
+                        <p style="font-size:14pt;font-weight:bold">{{system.price}}¤</p>
                         <button style="background-color:#18f081" data-action="submit-product" data-product-id="{{_id}}">BUY</button>
                     </div>
                 </div>
-            {{/each}}
-        </div>
+            {{/unless}}{{/each}}
 
-        <div class="tab scamazon-cytech" data-group="scamazon-products" data-tab="scamazon-cytech">
-            {{#each equipment}}{{#if system.cybertech}}
-                <div style="align-items:center;border:1px solid black;display:flex;gap:10px;justify-content:space-between;margin:10px">
-                    <div style="align-items:center;border-right:1px solid black;display:flex;flex:8;gap:5px">
-                        <img src="{{img}}" height="64" width="64" />
+            <span style="font-family:Kontrapunkt;font-size:14pt;font-weight:bold;margin:0.5em">BOOSTERS</span>
+
+            {{#each equipment}}{{#equals flags.world.scamazonCategory 'booster'}}
+                <div style="align-items:center;border:1px outset black;display:flex;gap:10px;justify-content:space-between;margin:10px">
+                    <div style="display:flex;flex:8;gap:5px">
+                        <img src="{{img}}" style="cursor:pointer" data-action="inspect" data-product-id="{{_id}}" height="96" width="96" />
                         <div>
                             <span style="font-family:PPM Extended Black;font-size:14pt;font-weight:bold;text-transform:uppercase">{{name}}</span>
                             {{{system.description}}}
                         </div>
                     </div>
                     <div style="flex:1.5;padding:5px;text-align:center;width:10rem">
-                        <span style="font-size:14pt;font-weight:bold">{{system.price}}¤</span>
-                        <button name="product" style="background-color:#18f081" type="submit" value="{{_id}}">BUY</button>
+                        <p style="font-size:14pt;font-weight:bold">{{system.price}}¤</p>
+                        <button style="background-color:#18f081" data-action="submit-product" data-product-id="{{_id}}">BUY</button>
+                    </div>
+                </div>
+            {{/equals}}{{/each}}
+
+        </div>
+
+        <div class="tab scamazon-cytech" data-group="scamazon-products" data-tab="scamazon-cytech">
+
+            {{#each weapon}}{{#if system.cybertech}}
+                <div style="align-items:center;border:1px outset black;display:flex;gap:10px;justify-content:space-between;margin:10px">
+                    <div style="display:flex;flex:8;gap:5px">
+                        <img src="{{img}}" style="cursor:pointer" data-action="inspect" data-product-id="{{_id}}" height="96" width="96" />
+                        <div>
+                            <span style="font-family:PPM Extended Black;font-size:14pt;font-weight:bold;text-transform:uppercase">{{name}}</span>
+                            {{{system.description}}}
+                        </div>
+                    </div>
+                    <div style="flex:1.5;padding:5px;text-align:center;width:10rem">
+                        <p style="font-size:14pt;font-weight:bold">{{system.price}}¤</p>
+                        <button style="background-color:#18f081" data-action="submit-product" data-product-id="{{_id}}">BUY</button>
                     </div>
                 </div>
             {{/if}}{{/each}}
+
+            {{#each equipment}}{{#if system.cybertech}}
+                <div style="align-items:center;border:1px outset black;display:flex;gap:10px;justify-content:space-between;margin:10px">
+                    <div style="display:flex;flex:8;gap:5px">
+                        <img src="{{img}}" style="cursor:pointer" data-action="inspect" data-product-id="{{_id}}" height="96" width="96" />
+                        <div>
+                            <span style="font-family:PPM Extended Black;font-size:14pt;font-weight:bold;text-transform:uppercase">{{name}}</span>
+                            {{{system.description}}}
+                        </div>
+                    </div>
+                    <div style="flex:1.5;padding:5px;text-align:center;width:10rem">
+                        <p style="font-size:14pt;font-weight:bold">{{system.price}}¤</p>
+                        <button style="background-color:#18f081" data-action="submit-product" data-product-id="{{_id}}">BUY</button>
+                    </div>
+                </div>
+            {{/if}}{{/each}}
+
         </div>
 
         <div class="tab scamazon-armor" data-group="scamazon-products" data-tab="scamazon-armor">
             {{#each armor}}
-                <div style="align-items:center;border:1px solid black;display:flex;gap:10px;justify-content:space-between;margin:10px">
-                    <div style="align-items:center;border-right:1px solid black;display:flex;flex:8;gap:5px">
-                        <img src="{{img}}" height="64" width="64" />
+                <div style="align-items:center;border:1px outset black;display:flex;gap:10px;justify-content:space-between;margin:10px">
+                    <div style="align-items:center;display:flex;flex:8;gap:5px">
+                        <img src="{{img}}" style="cursor:pointer" data-action="inspect" data-product-id="{{_id}}" height="96" width="96" />
                         <div>
                             <span style="font-family:PPM Extended Black;font-size:14pt;font-weight:bold;text-transform:uppercase">{{name}}</span></br>
                             <span style="font-weight:bold">Armor: d{{system.tier.max}}</span>
@@ -60,30 +97,47 @@
                         </div>
                     </div>
                     <div style="flex:1.5;padding:5px;text-align:center;width:10rem">
-                        <span style="font-size:14pt;font-weight:bold">{{system.price}}¤</span>
-                        <button name="product" style="background-color:#18f081" type="submit" value="{{_id}}">BUY</button>
+                        <p style="font-size:14pt;font-weight:bold">{{system.price}}¤</p>
+                        <button style="background-color:#18f081" data-action="submit-product" data-product-id="{{_id}}">BUY</button>
                     </div>
                 </div>
             {{/each}}
         </div>
 
-
         <div class="tab scamazon-equipment" data-group="scamazon-products" data-tab="scamazon-equipment">
-            {{#each equipment}}{{#unless system.cybertech}}
-                <div style="align-items:center;border:1px solid black;display:flex;gap:10px;justify-content:space-between;margin:10px">
-                    <div style="align-items:center;border-right:1px solid black;display:flex;flex:8;gap:5px">
-                        <img src="{{img}}" height="64" width="64" />
+            {{#each equipment}}{{#unless system.cybertech}}{{#unless flags.world.scamazonCategory}}
+                <div style="align-items:center;border:1px outset black;display:flex;gap:10px;justify-content:space-between;margin:10px">
+                    <div style="display:flex;flex:8;gap:5px">
+                        <img src="{{img}}" style="cursor:pointer" data-action="inspect" data-product-id="{{_id}}" height="96" width="96" />
                         <div>
                             <span style="font-family:PPM Extended Black;font-size:14pt;font-weight:bold;text-transform:uppercase">{{name}}</span>
                             {{{system.description}}}
                         </div>
                     </div>
                     <div style="flex:1.5;padding:5px;text-align:center;width:10rem">
-                        <span style="font-size:14pt;font-weight:bold">{{system.price}}¤</span>
-                        <button name="product" style="background-color:#18f081" type="submit" value="{{_id}}">BUY</button>
+                        <p style="font-size:14pt;font-weight:bold">{{system.price}}¤</p>
+                        <button style="background-color:#18f081" data-action="submit-product" data-product-id="{{_id}}">BUY</button>
                     </div>
                 </div>
-            {{/unless}}{{/each}}
+            {{/unless}}{{/unless}}{{/each}}
+        </div>
+
+        <div class="tab scamazon-drugs" data-group="scamazon-products" data-tab="scamazon-drugs">
+            {{#each equipment}}{{#equals flags.world.scamazonCategory 'drug'}}
+                <div style="align-items:center;border:1px outset black;display:flex;gap:10px;justify-content:space-between;margin:10px">
+                    <div style="display:flex;flex:8;gap:5px">
+                        <img src="{{img}}" style="cursor:pointer" data-action="inspect" data-product-id="{{_id}}" height="96" width="96" />
+                        <div>
+                            <span style="font-family:PPM Extended Black;font-size:14pt;font-weight:bold;text-transform:uppercase">{{name}}</span>
+                            {{{system.description}}}
+                        </div>
+                    </div>
+                    <div style="flex:1.5;padding:5px;text-align:center;width:10rem">
+                        <p style="font-size:14pt;font-weight:bold">{{system.price}}¤</p>
+                        <button style="background-color:#18f081" data-action="submit-product" data-product-id="{{_id}}">BUY</button>
+                    </div>
+                </div>
+            {{/equals}}{{/each}}
         </div>
 
     </section>

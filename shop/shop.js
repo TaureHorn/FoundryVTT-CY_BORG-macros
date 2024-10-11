@@ -1,4 +1,20 @@
 
+Handlebars.registerHelper('equals', function(item1, item2, options) {
+    if (item1 === item2) {
+        return options.fn(this)
+    } else {
+        return options.inverse(this)
+    }
+})
+
+Handlebars.registerHelper('unequals', function(item1, item2, options) {
+    if (item1 === item2) {
+        return options.inverse(this)
+    } else {
+        return options.fn(this)
+    }
+})
+
 class Scamazon extends FormApplication {
 
     static get defaultOptions() {
@@ -23,6 +39,7 @@ class Scamazon extends FormApplication {
         { tab: "cytech", label: "CYTECH" },
         { tab: "armor", label: "ARMOR" },
         { tab: "equipment", label: "EQUIPMENT" },
+        { tab: "drugs", label: "DRUGS" },
     ]
 
     getData() {
@@ -42,10 +59,21 @@ class Scamazon extends FormApplication {
         super.activateListeners(html)
         html.on('click', '[data-action]', async (event) => {
             const data = $(event.currentTarget).data()
-            if (data.action === 'submit-product') {
-                this.handlePurchase(data.productId)
+            switch (data.action) {
+                case 'inspect':
+                    this.handleInspect(data.productId)
+                    break;
+                case 'submit-product':
+                    this.handlePurchase(data.productId)
+                    break;
+                default:
+                    console.error('Scamazon.activateListeners recieved and invalid data-action')
             }
         })
+    }
+
+    handleInspect(id) {
+        game.items.get(id).sheet.render(true)
     }
 
     async handlePurchase(id) {
@@ -58,17 +86,24 @@ class Scamazon extends FormApplication {
                 await user.createEmbeddedDocuments('Item', [item])
             } else {
                 // if user does own $item, incremement the items quantity
-                const newItems = {...user.items}
+                const newItems = { ...user.items }
                 // increment items quantity
-                ++ (newItems._source.find((obj) => obj.name === item.name && obj.system.description === item.system.description).system.quantity)
-                await user.update({'items': newItems})
+                ++(newItems._source.find((obj) => obj.name === item.name && obj.system.description === item.system.description).system.quantity)
+                await user.update({ 'items': newItems })
             }
+        }
+
+        async function soundAlert() {
+            const bloop = new foundry.audio.Sound('0_CUSTOM/3_AUDIO/sfx/electronic-click.ogg', { 'context': game.audio.interface })
+            await bloop.load()
+            await bloop.play()
         }
 
         const modifiers = game.user.getFlag('world', 'cy_borg-shop')
         const price = Math.ceil((item.system.price * modifiers.deliveryModifier) + modifiers.transactionFee)
         if (user.system.credits >= price) {
             // if they can afford to buy the item; update credits - price
+            await soundAlert()
             await user.update({ 'system.credits': user.system.credits - price })
             await giveItem(item)
         } else {
@@ -121,10 +156,13 @@ class Scamazon extends FormApplication {
     }
 
     async _updateObject(event, formData) {
-        
-        game.users.forEach(async (user) => {
-            await user.setFlag('world', 'cy_borg-shop', formData)
-        })
+
+        if (game.user.isGM) {
+            game.users.forEach(async (user) => {
+                await user.setFlag('world', 'cy_borg-shop', formData)
+            })
+        }
+
     }
 
 }
