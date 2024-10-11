@@ -1,4 +1,4 @@
-if (!game.user.hasRole("GAMEMASTER")) {
+if (!game.user.isGM) {
     ui.notifications.error("Only a GM is allowed to use this macro")
 } else {
     if (canvas.lighting.placeables < 1) {
