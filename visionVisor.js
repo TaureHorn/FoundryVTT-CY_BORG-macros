@@ -67,6 +67,10 @@ let views = {
 	}
 }
 // get token and actor data find if nighteyes equipped
+if (canvas.tokens.controlled.length < 1) {
+	ui.notifications.warn('You must select a token')
+	return
+}
 const token = canvas.tokens.controlled[0].document
 const actor = game.actors.get(token.actorId)
 let normal = 'standard'
@@ -83,3 +87,4 @@ const sight = views[viewMode].sight
 const detectionModes = views[viewMode].detectionModes
 token.update({'detectionModes': detectionModes, 'sight': sight})
 await token.setFlag('world', 'visionVisor', !enabled)
+

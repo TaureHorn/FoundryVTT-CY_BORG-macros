@@ -1,0 +1,24 @@
+<form>
+    <fieldset id="users-checkbox">
+    <legend>Users</legend>
+    {{#each users}}
+        <div> 
+            <input type="checkbox" id="check-{{id}}" name="recipient" value="{{id}}"/>
+            <label>{{name}}</label>
+        </div>
+    {{/each}}
+    </fieldset>
+    <fieldset>
+    <legend>Payee</legend>
+        <label>Name</label>
+        <input type="text" id="payee-name" name="payeeName" required minlength="1" maxlength="64" />
+    </fieldset>
+    <fieldset>
+    <legend>Amount</legend>
+        <div style="align-items:center;display:flex;gap: 5px">
+            <input type="number" id="pay-amount" name="payAmount" required minlength="1" maxlength="16" />
+            <label style="font-size:22pt">¤</label>
+        </div>
+    </fieldset>
+    <button type="submit" value="confirm">SUBMIT PAYMENT</button>
+</form>
