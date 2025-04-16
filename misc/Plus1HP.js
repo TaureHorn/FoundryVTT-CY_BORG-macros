@@ -1,5 +1,5 @@
 
-// DECREMENT TOKEN(S) HP BY 1
+// INCREMENT TOKEN(S) HP BY 1
 
 // exit if no tokens selected
 if (canvas.tokens.controlled.length < 1) {
@@ -10,7 +10,8 @@ let tokensData = canvas.tokens.controlled.entries()
 
 for (let [i, token] of tokensData) {
     const actor = token.document.actor
-    let HP = actor.system.hitPoints.value - 1
+    let HP = actor.system.hitPoints.value + 1
+    if (HP > actor.system.hitPoints.max) return
 
     actor.update({ 'system.hitPoints.value': HP })
 
@@ -19,10 +20,10 @@ for (let [i, token] of tokensData) {
         y: token.document.y + ((canvas.grid.size * token.document.height) * 0.5)
     }
 
-    const red = CONFIG.canvasTextStyle
-    red.fill = '#ff0055'
-    red.fontSize = '32px'
+    const green = CONFIG.canvasTextStyle
+    green.fill = '#18f081'
+    green.fontSize = '32px'
 
-    await canvas.interface.createScrollingText(position, '-1', { direction: 1, textStyle: red })
+    canvas.interface.createScrollingText(position, '+1', { direction: 1, textStyle: green })
 }
 

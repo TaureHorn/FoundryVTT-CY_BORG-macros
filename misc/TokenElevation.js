@@ -1,51 +1,39 @@
-if (game.user.hasRole("GAMEMASTER") && canvas.tokens.controlled.length === 0) {
-    ui.notifications.warn(`You need to select a token`)
+
+// SET SELECTED TOKEN(S) ELEVATION WITH DIALOG
+
+if (canvas.tokens.controlled.length < 1) {
+    return ui.notifications.warn(`Macro - ${this.name}: You need to select at least one token`)
 }
 
-let actorData = [canvas.tokens.controlled[0].document]
-if (canvas.tokens.controlled.length > 1) {
-    const docData = []
-    canvas.tokens.controlled.forEach((token) => {
-        docData.push(token.document)
-    })
-    actorData = docData
-}
+const tokenData = canvas.tokens.controlled
 
+let form =
+    `<form class="dialog">
+		<label for="elevation">ELEVATION? (m)</label>
+		<input type="number" min="0" max="1000" id="elevation" name="elevation" 
+			value=${tokenData[0].document.elevation}
+			placeholder="${tokenData[0].document.elevation}" />
+	</form>`
 
-if (actorData.length === 0 || typeof actorData[0] === 'undefined') {
-    ui.notifications.warn(`You need to select at least one token`)
+new Dialog({
+    buttons: {
+        submit: { label: 'submit', callback: () => confirmed = true },
+        cancel: { label: 'cancel', callback: () => confirmed = false }
+    },
+    content: form,
+    default: 'submit',
+    title: 'ELEVATION SETTER',
 
-} else {
+    close: html => {
+        (async () => {
+            if (confirmed) {
+                const elevation = html.find('#elevation')[0].value
 
-    let form =
-        `<form class="dialog"
-            <div clas="form-group">
-                <label for="elevation">ELEVATION? (m)</label>
-                <input type="number" min="0" max="1000" id="elevation" name="elevation" value=${actorData[0].elevation} placeholder=${actorData[0].elevation}>
-                </select>
-            </div>
-        </form> `
-
-    new Dialog({
-        title: "ELEVATION PICKER",
-        content: form,
-        buttons: {
-            submit: { label: "SUBMIT", callback: () => confirmed = true },
-            cancel: { label: "CANCEL", callback: () => confirmed = false }
-        },
-        default: "submit",
-
-        close: html => {
-            (async () => {
-                if (confirmed) {
-                    const elevation = html.find('#elevation')[0].value
-
-                    actorData.forEach(async (token) => {
-                        token.update({ elevation: elevation })
-                    })
-                }
-            })();
-        }
-    }).render(true)
-}
+                tokenData.forEach(token => {
+                    token.document.update({ 'elevation': elevation })
+                })
+            }
+        })();
+    }
+}).render(true)
 
