@@ -19,10 +19,10 @@ for (let [i, token] of tokensData) {
         y: token.document.y + ((canvas.grid.size * token.document.height) * 0.5)
     }
 
-    const red = CONFIG.canvasTextStyle
-    red.fill = '#ff0055'
-    red.fontSize = '32px'
-
-    await canvas.interface.createScrollingText(position, '-1', { direction: 1, textStyle: red })
+    canvas.interface.createScrollingText(position, '-1', {
+        direction: 1,
+        fill: '#ff0055',
+        fontSize: '32px'
+    })
 }
 
