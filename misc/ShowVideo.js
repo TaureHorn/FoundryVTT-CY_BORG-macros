@@ -1,5 +1,15 @@
 // ARGS: 1: path String, selector String.
 
+if (typeof path === 'undefined') {
+    return ui.notifications.error(`${this.name}: did not receive a path as one of its arguments`)
+}
+
+if (typeof selector === 'undefined') {
+    return ui.notifications.error(`${this.name}: did not recieve a selector as one of its arguments`)
+}
+
+console.log(this.name, 'path', path, 'selector', selector)
+
 // DEFINE STYLES
 const styles = {
     [selector]: $(`<style>${selector} {
