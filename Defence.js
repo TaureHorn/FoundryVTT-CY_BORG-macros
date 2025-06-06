@@ -1,27 +1,38 @@
-if (game.user.isGM && canvas.tokens.controlled.length !== 1) {
-    return ui.notifications.warn(`You need to select a token that is defending an attack`)
+// MACRO TO ACCEPT DR AND DAMAGE DICE, AUTO ROLL A CHARACTERS DODGE AND DEAL DAMAGE IF FAILED THEN OUTPUT RESULT TO CHAT
+
+// GET ACTOR
+if (!actor) {
+    return ui.notifications.warn(`${this.name}: Unable to get an actor to make a defence roll. Have you selected a token, or set a character as a representative in the user config?`)
 }
 
-let actorData = actor || canvas.tokens.controlled[0].document.actor || game.user.character;
-if (actorData === 'null') {
-    return ui.notificatins.warn(`${this.name}: Unable to get an actor to make a defence roll`)
-}
-
-let armour = {
-    "img": "0_CUSTOM/2_ASSETS/items/equipment/cheap-clothes.webp",
-    "name": "No armour",
-    "tier": 0
-}
-
-const item = (actorData.items._source).find(({ type }) => type === "armor")
-
-if (typeof item !== 'undefined') {
-    armour = {
-        "img": item.img,
-        "name": item.name,
-        "tier": item.system.tier.value
+// GET ARMOR
+function getArmor(actor) {
+    let itemDoc = false
+    switch (actor.type) {
+        case 'character':
+        case 'vehicle':
+            const item = actor.items.find(item => item.type === 'armor')
+            if (item) itemDoc = item
+            break;
+        case 'npc':
+            for (const item of game.items) {
+                if (item.type != 'armor') continue
+                if (actor.system.description.includes(item.uuid)) itemDoc = item
+            }
+            break;
+        default:
+            break;
     }
+
+    return {
+        img: itemDoc ? itemDoc.img : "0_CUSTOM/2_ASSETS/items/equipment/cheap-clothes.webp",
+        name: itemDoc ? itemDoc.name : "No armour",
+        tier: itemDoc ? itemDoc.system.tier.value : 0,
+        ...(itemDoc && { id: itemDoc.id })
+    }
+
 }
+const armour = getArmor(actor)
 
 let form =
     `<form class="dialog">
@@ -44,6 +55,7 @@ let form =
             </div>
         </form>
         `
+
 const color = {
     "fumble": `#ff0055`,
     "normal": `#f3e600`,
@@ -127,7 +139,7 @@ const dialog = new Dialog({
         (async () => {
             if (confirmed) {
                 const DR = Math.floor(Number(html.find('#defence-dr')[0].value))
-                const modifier = actorData.type === 'character' ? actorData.system.abilities.agility.value : 0
+                const modifier = actor.type === 'character' ? actor.system.abilities.agility.value : 0
                 const defenceRoll = await new Roll(`1d20+${modifier}`).roll()
                 const diceRoll = defenceRoll.total - modifier
 
@@ -145,6 +157,7 @@ const dialog = new Dialog({
                             </div >
                         </div >
                         `
+
                 // output damage
                 if (defenceRoll.total < DR) {
                     const dmgDice = html.find('#incoming-attack-die')[0].value
@@ -156,10 +169,22 @@ const dialog = new Dialog({
                             </p>
                             `
                     // auto deal damage
-                    let HP = actorData.system.hitPoints.value
+                    let HP = actor.system.hitPoints.value
                     HP = HP - damage
+                    actor.update({ 'system.hitPoints.value': HP })
 
-                    actorData.update({ 'system.hitPoints.value': HP })
+                    if (token) {
+                        const position = {
+                            x: token.document.x + ((canvas.grid.size * token.document.width) * 0.5),
+                            y: token.document.y + ((canvas.grid.size * token.document.height) * 0.5)
+                        }
+
+                        canvas.interface.createScrollingText(position, `-${damage}`, {
+                            direction: 1,
+                            fill: '#ff0055',
+                            fontSize: '32px'
+                        })
+                    }
 
                     // fumble
                     if (diceRoll === defenceRoll.terms[0].number) {
@@ -167,19 +192,14 @@ const dialog = new Dialog({
                                 <p>FUMBLE: Damage has been doubled and your armour has been reduced by one tier</p>
                                 `
 
-                        // auto decrement armour tier
-                        const actorData = canvas.tokens.controlled[0].document.actor
-                        const items = actorData.items._source
-                        const armour = items.find(({ type }) => type === "armor")
-                        const index = items.findIndex((obj) => obj === armour)
-
-                        if (typeof armour !== 'undefined') {
-                            const tier = armour.system.tier.value >= 1 ? armour.system.tier.value - 1 : 0
-                            const armourReduced = structuredClone(armour)
-                            const changedItems = structuredClone(items)
-                            armourReduced.system.tier.value = tier
-                            changedItems[index] = armourReduced
-                            actorData.update({ 'items': changedItems })
+                        if (actor.type != 'npc' && armour.id) {
+                            // auto decrement armour tier if not npc and have armour
+                            const changedItems = structuredClone(actor.items._source)
+                            const armourReduced = changedItems.find(item => item._id === armour.id)
+                            armourReduced.system.tier.value = armourReduced.system.tier.value >= 1
+                                ? armourReduced.system.tier.value - 1
+                                : 0
+                            actor.update({ items: changedItems })
                         }
                     }
 
