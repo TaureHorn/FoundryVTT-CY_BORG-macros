@@ -52,8 +52,8 @@ const dialog = new Dialog({
                 : html.find('#user-select').serializeArray().map(obj => obj.value)
 
             // trigger macro in users sessions via game socket
-            const trigger = game.macros.get('<macro id>')
-            if (typeof trigger === 'undefined') return ui.notifications.error(`${this.name}: no trigger macro with id '<macro id>'`)
+            const trigger = game.macros.get('x5ShsKu7C7JFqkXb')
+            if (typeof trigger === 'undefined') return ui.notifications.error(`${this.name}: no trigger macro with id 'x5ShsKu7C7JFqkXb'`)
             trigger.execute({
                 userArr: users,
                 macroId: macroId,
