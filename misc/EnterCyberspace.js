@@ -120,6 +120,7 @@ if (actorTokensInDestination.length === 0) {
         const spawn = targetScene.getFlag('world', 'spawn-point')
         for (const datum in spawn) mods[datum] = spawn[datum]
         if (spawn.customName) {
+            delete mods.customName
             let setName = new Function('return ' + spawn.customName.toString())()
             mods.name = setName()
         }
