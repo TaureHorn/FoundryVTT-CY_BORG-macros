@@ -145,12 +145,16 @@ const dialog = new Dialog({
                     switch (fumble.total) {
                         case 1:
                         case 2:
+                            result_html += `Out of ammo</p>`
+                            break;
                         case 3:
-                            result_html += `Out of ammo. You also drop the weapon or otherwise make it unusable until an action is spent fixing it</p>`
+                            result_html += `You drop the weapon`
                             break;
                         case 4:
+                            result_html += `The weapon misfires rendering it unusbale until an action is spent fixing it</p>`
+                            break;
                         case 5:
-                            result_html += `Your weapon misfires/breaks. It has to be repaired outside of combat</p>`
+                            result_html += `Your weapon breaks. It has to be repaired outside of combat</p>`
                             break;
                         case 6:
                             const explosion = await new Roll(`1d6`).roll()
