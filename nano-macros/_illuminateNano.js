@@ -1,12 +1,12 @@
 // AUTOMATICALLY CALLED TO MAKE THE NANO INFECTED SPARKLE IN BLACKLIGHTS
+// ARGS tokenDoc = class tokenDocument
 
 // EXIT IF NO TOKEN PROVIDED
-if (typeof token === 'undefined') return
-if (typeof token.actor === 'undefined') return
+if (typeof tokenDoc === 'undefined') return
+if (typeof tokenDoc.actor === 'undefined') return
 
 // GET NANO INFECTION STATE FROM TOKEN ACTOR FLAGS AND RETURN IF NOT INFECTED
-const infected = token.actor.getFlag('world', 'nanoInfected')
-if (!infected) return
+if (!tokenDoc.actor.getFlag('world', 'nanoInfected')) return
 
 // GLOW EFFECT JSON
 const glow = {
@@ -28,13 +28,14 @@ const glow = {
 	shadows: 0
 }
 
-// GET STATE ILLUMINATION STATE FROM TOKEN AND SET LIGHT AND FLAGS TO INVERSE
+// GET ILLUMINATION STATE FROM TOKEN AND SET LIGHT AND FLAGS TO INVERSE
 const flagName = this.name
-const illuminated = token.document.getFlag('world', flagName)?.state
-const unilluminatedLight = token.document.getFlag('world', flagName)?.previous
+const illuminated = tokenDoc.getFlag('world', flagName)?.state
+const unilluminatedLight = tokenDoc.getFlag('world', flagName)?.previous
 
-await token.document.setFlag('world', flagName, { 
-	state: !illuminated, 
-	previous: illuminated ? unilluminatedLight : token.light
+await tokenDoc.setFlag('world', flagName, {
+	state: !illuminated,
+	previous: illuminated ? unilluminatedLight : tokenDoc.light
 })
-await token.document.update({ light: illuminated ? unilluminatedLight : glow })
+tokenDoc.update({ light: illuminated ? unilluminatedLight : glow })
+
