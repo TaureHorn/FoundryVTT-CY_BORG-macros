@@ -6,25 +6,29 @@ if (typeof tokenDoc === 'undefined') return
 if (typeof tokenDoc.actor === 'undefined') return
 
 // GET NANO INFECTION STATE FROM TOKEN ACTOR FLAGS AND RETURN IF NOT INFECTED
-if (!tokenDoc.actor.getFlag('world', 'nanoInfected')) return
+if (
+    !tokenDoc.actor.getFlag('world', 'nanoInfected') &&
+    !tokenDoc.getFlag('world', 'nanoInfected')
+) return
 
 // GLOW EFFECT JSON
 const glow = {
 	alpha: 0.5,
 	angle: 360,
 	animation: {
-		intensity: 5,
+		intensity: 10,
 		reverse: false,
-		speed: 4,
-		type: 'fairy'
+		speed: 10,
+		type: 'ghost'
 	},
 	attenuation: 1,
-	bright: 0.25,
+	bright: 0,
+    color: 'dc8add',
 	coloration: 1,
-	contrast: 0,
-	dim: 0.5,
-	luminosity: 0.75,
-	saturation: 1,
+	contrast: 1,
+	dim: 0.25,
+	luminosity: 1,
+	saturation: 0,
 	shadows: 0
 }
 
