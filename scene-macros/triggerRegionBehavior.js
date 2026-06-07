@@ -22,5 +22,5 @@ async function updateBehavior(state, delay) {;
 // ENSURE DISABLED >> ENABLE TO TRIGGER EVENT >> RESET BACK TO DISABLED
 updateBehavior(true, 100)
 updateBehavior(false, 500)
-updateBehavior(true, 1000)
+updateBehavior(true, 2500)
 
