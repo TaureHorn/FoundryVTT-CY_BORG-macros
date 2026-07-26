@@ -8,7 +8,7 @@ if (!game.user.isGM) {
 // GET ACTIVE USERS & IDS
 const users = {}
 for (const user of game.users) {
-    if (!user.active || user.id == game.userId) continue
+    if (!user.active) continue
     users[user.id] = user.name
 }
 
@@ -105,18 +105,22 @@ const dialog = new Dialog({
                     }
                 }
 
+                const showRCDMessageID = 'T75PJ3xJ8P7sLWr7'
                 // CALL triggerSocketMacro TO EMIT ON SOCKET AND SEND DATA TO PLAYERS
                 await game.macros.get('x5ShsKu7C7JFqkXb').execute({
                     userArr: recipients,
-                    macroId: 'T75PJ3xJ8P7sLWr7',
+                    macroId: showRCDMessageID,
                     macroArgs: message
                 })
+
+                if (recipients.includes(game.userId)) {
+                    await game.macros.get(showRCDMessageID).execute(message)
+                }
 
             }
         })();
     }
 
 })
-
 dialog.options.classes.push('nlb-dialog')
 dialog.render(true)

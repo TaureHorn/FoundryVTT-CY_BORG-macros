@@ -1,8 +1,9 @@
 // CALL ON AN INDIVIDUAL OBJECT TO GENERATE LOOT AND MAKE A TOKEN AN ITEM PILE
 // ARGS Object {actor}, Object {token}
 
-if (actor.type != 'npc') return
 if (!game.user.isGM) return
+if (! actor.getFlag('world', 'lootable')) return
+if (actor.type != 'npc') return
 if (typeof token === 'undefined') return
 
 // GENERATE LOOT BASED ON A TABLE
